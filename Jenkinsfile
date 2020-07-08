@@ -162,7 +162,6 @@ pipeline {
           for(cause in currentBuild.rawBuild.getCauses()) {
             env['BUILD_'+cause.class.getSimpleName().replaceAll('(.+?)([A-Z])','$1_$2').toUpperCase()]=cause.getShortDescription()
           }
-          sh script: './initialize.sh'
         }
       }
     }
@@ -173,7 +172,8 @@ pipeline {
       steps {
         lock("${env.ENVIRONMENT}-deployments") {
           echo "Deployments to ${env.ENVIRONMENT} have been locked"
-          notifySlackOfDeployment()
+          //notifySlackOfDeployment()
+          sh script: './initialize.sh'
           saunter('./build.sh')
         }
       }
