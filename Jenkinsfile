@@ -142,7 +142,13 @@ pipeline {
     string(name: 'DANGER_ZONE_DU_VERSION', defaultValue: 'default', description: "Manual override of DU_VERSION for DANGER_ZONE." )
     string(name: 'CUSTOM_CLUSTER_ID', defaultValue: 'default', description: 'Override the cluster-id -- **To use this functionality, Jenkins needs access to port 30443 on K8s worker nodes**')
   }
-  agent none
+  agent {
+    dockerfile {
+      registryUrl 'https://index.docker.io/v1/'
+      registryCredentialsId 'DOCKER_USERNAME_PASSWORD'
+      args DOCKER_ARGS
+    }
+  }
   triggers {
     upstream(upstreamProjects: 'department-of-veterans-affairs/health-apis/master', threshold: hudson.model.Result.SUCCESS)
   }
@@ -164,13 +170,6 @@ pipeline {
       when {
         expression { return env.DANGER_ZONE == 'false' }
       }
-      agent {
-        dockerfile {
-            registryUrl 'https://index.docker.io/v1/'
-            registryCredentialsId 'DOCKER_USERNAME_PASSWORD'
-            args DOCKER_ARGS
-           }
-      }
       steps {
         lock("${env.ENVIRONMENT}-deployments") {
           echo "Deployments to ${env.ENVIRONMENT} have been locked"
@@ -188,13 +187,6 @@ pipeline {
        message "I would like to enter the DANGER_ZONE..."
        ok "You may enter!"
        submitter "aparcel-va,bryan.schofield,evan.clendenning,gabriel.olavarria,ian.laflamme,joshua.hulbert,steven.bair,monica.ramirez"
-      }
-      agent {
-        dockerfile {
-            registryUrl 'https://index.docker.io/v1/'
-            registryCredentialsId 'DOCKER_USERNAME_PASSWORD'
-            args DOCKER_ARGS
-           }
       }
       steps {
         lock("${env.ENVIRONMENT}-deployments") {
