@@ -113,17 +113,6 @@ def notifySlackOfDeployment() {
   }
 }
 
-/*
- * We'll use the host user db so that any files written from the docker container look
- * like they were written by real host users.
- *
- * We also want to share the Maven repostory and SSH configuration, and finally we'll
- * need to be able to access docker. For that, we'll need to add the docker group, which
- * is currently 475, we'll need to mount the sock and need access to the rest of docker
- * lib for containers.
- */
-final DOCKER_ARGS = "--privileged --group-add 497 -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -v /data/jenkins/.m2/repository:/root/.m2/repository -v /var/lib/jenkins/.ssh:/root/.ssh -v /var/run/docker.sock:/var/saunter/docker.sock -v /var/lib/docker:/var/lib/docker -v /etc/docker/daemon.json:/etc/docker/daemon.json"
-
 pipeline {
   options {
     disableConcurrentBuilds()
@@ -143,10 +132,20 @@ pipeline {
     string(name: 'CUSTOM_CLUSTER_ID', defaultValue: 'default', description: 'Override the cluster-id -- **To use this functionality, Jenkins needs access to port 30443 on K8s worker nodes**')
   }
   agent {
-    dockerfile {
+    docker {
       registryUrl 'https://index.docker.io/v1/'
       registryCredentialsId 'DOCKER_USERNAME_PASSWORD'
-      args DOCKER_ARGS
+      image 'vasdvp/health-apis-cluster-tools:latest'
+      /*
+       * We'll use the host user db so that any files written from the docker container look
+       * like they were written by real host users.
+       *
+       * We also want to share the Maven repostory and SSH configuration, and finally we'll
+       * need to be able to access docker. For that, we'll need to add the docker group, which
+       * is currently 475, we'll need to mount the sock and need access to the rest of docker
+       * lib for containers.
+       */
+      args "--privileged --group-add 497 -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -v /data/jenkins/.m2/repository:/root/.m2/repository -v /var/lib/jenkins/.ssh:/root/.ssh -v /var/run/docker.sock:/var/saunter/docker.sock -v /var/lib/docker:/var/lib/docker -v /etc/docker/daemon.json:/etc/docker/daemon.json"
     }
   }
   triggers {
@@ -173,7 +172,6 @@ pipeline {
         lock("${env.ENVIRONMENT}-deployments") {
           echo "Deployments to ${env.ENVIRONMENT} have been locked"
           //notifySlackOfDeployment()
-          sh script: './initialize.sh'
           saunter('./build.sh')
         }
       }
