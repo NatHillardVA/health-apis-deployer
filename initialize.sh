@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-export JOSH="It me."
+declare -x JOSH="It me."
