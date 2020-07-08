@@ -164,18 +164,6 @@ pipeline {
         }
       }
     }
-    stage('Deploy') {
-      when {
-        expression { return env.DANGER_ZONE == 'false' }
-      }
-      steps {
-        lock("${env.ENVIRONMENT}-deployments") {
-          echo "Deployments to ${env.ENVIRONMENT} have been locked"
-          //notifySlackOfDeployment()
-          saunter('./build.sh')
-        }
-      }
-    }
     stage('Danger Zone!') {
       when {
         beforeInput true
@@ -187,10 +175,15 @@ pipeline {
        submitter "aparcel-va,bryan.schofield,evan.clendenning,gabriel.olavarria,ian.laflamme,joshua.hulbert,steven.bair,monica.ramirez"
       }
       steps {
+        echo "LANA!!!"
+        echo "https://bit.ly/LDcydg"
+      }
+    }
+    stage('Deploy') {
+      steps {
         lock("${env.ENVIRONMENT}-deployments") {
-          echo "LANA!!!"
-          echo "https://bit.ly/LDcydg"
-          notifySlackOfDeployment()
+          echo "Deployments to ${env.ENVIRONMENT} have been locked"
+          //notifySlackOfDeployment()
           saunter('./build.sh')
         }
       }
