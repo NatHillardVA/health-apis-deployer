@@ -142,7 +142,6 @@ pipeline {
     string(name: 'DANGER_ZONE_DU_VERSION', defaultValue: 'default', description: "Manual override of DU_VERSION for DANGER_ZONE." )
     string(name: 'CUSTOM_CLUSTER_ID', defaultValue: 'default', description: 'Override the cluster-id -- **To use this functionality, Jenkins needs access to port 30443 on K8s worker nodes**')
   }
-  agent none
   triggers {
     upstream(upstreamProjects: 'department-of-veterans-affairs/health-apis/master', threshold: hudson.model.Result.SUCCESS)
   }
@@ -157,6 +156,7 @@ pipeline {
             env['BUILD_'+cause.class.getSimpleName().replaceAll('(.+?)([A-Z])','$1_$2').toUpperCase()]=cause.getShortDescription()
           }
         }
+        sh script: ./initialize.sh
       }
     }
     stage('Deploy') {
@@ -222,9 +222,9 @@ pipeline {
 
           if (env.PRODUCT != "none" && env.PRODUCT != null) {
             if (notifyOperationsChannel()) {
-              sendNotifications('api_operations')
+              //sendNotifications('api_operations')
             }
-            products()[env.PRODUCT].each { sendNotifications(it) }
+            //products()[env.PRODUCT].each { sendNotifications(it) }
           }
         }
       }

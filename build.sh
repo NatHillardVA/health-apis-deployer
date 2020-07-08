@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "Hello. $JOSH"
+
 #
 # Disable debugging unless explicitly set
 #
