@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
-git clone git@github.com:department-of-veterans-affairs/health-apis-exemplar-deployment.git
+echo "Hello. It me." > test.txt
+echo "JOSH" >> test.txt
 
 command -v ryan-secrets

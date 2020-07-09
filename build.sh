@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ls health-apis-exemplar-deployment
+cat test.txt
 
 #
 # Disable debugging unless explicitly set
