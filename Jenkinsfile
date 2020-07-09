@@ -153,7 +153,7 @@ pipeline {
   }
   environment {
     ENVIRONMENT = "${["qa", "uat", "staging", "production", "staging_lab", "lab"].contains(env.BRANCH_NAME) ? env.BRANCH_NAME.replaceAll('_','-') : "qa"}"
-    PATH = "$WORKSPACE/bin:$PATH"
+    PATH = sh returnStdout: true, script: '''echo $WORKSPACE/bin:$PATH'''
   }
   stages {
     stage('Set-up') {

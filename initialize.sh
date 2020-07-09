@@ -5,4 +5,3 @@ echo "JOSH" >> test.txt
 
 echo "$WORKSPACE"
 echo "$PATH"
-#command -v ryan-secrets
