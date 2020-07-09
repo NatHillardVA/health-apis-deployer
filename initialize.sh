@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-declare -x JOSH="It me."
+git clone git@github.com:department-of-veterans-affairs/health-apis-exemplar-deployment.git
+
+command -v ryan-secrets

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Hello. $JOSH"
+ls health-apis-exemplar-deployment
 
 #
 # Disable debugging unless explicitly set
@@ -21,7 +21,7 @@ set -euo pipefail
 #
 # Make our utilities available on the path and set up the caching mechanism
 #
-export PATH=$WORKSPACE/bin:$PATH
+#export PATH=$WORKSPACE/bin:$PATH
 export CACHE_DIR=$(mktemp -p . -d cache.XXXX )
 
 
