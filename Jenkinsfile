@@ -162,6 +162,7 @@ pipeline {
           for(cause in currentBuild.rawBuild.getCauses()) {
             env['BUILD_'+cause.class.getSimpleName().replaceAll('(.+?)([A-Z])','$1_$2').toUpperCase()]=cause.getShortDescription()
           }
+          sh script: './initialize.sh'
         }
       }
     }
