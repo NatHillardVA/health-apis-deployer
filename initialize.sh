@@ -3,4 +3,5 @@
 echo "Hello. It me." > test.txt
 echo "JOSH" >> test.txt
 
-command -v ryan-secrets
+echo "$PATH"
+#command -v ryan-secrets
