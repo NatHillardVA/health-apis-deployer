@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: $DU_NAMESPACE
+  labels:
+    deployment-id: $K8S_DEPLOYMENT_ID
+    deployment-unit: $PRODUCT
+    deployment-unit-artifact: $DU_ARTIFACT
+    deployment-unit-version: $DU_VERSION
+    deployment-date: $BUILD_DATE
+    deployment-app-version: $CLAIMS_VERSION
+    deployment-test-status: UNTESTED
+---
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: claims-attributes
+  namespace: $DU_NAMESPACE
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /(.*)
+            backend:
+              serviceName: claims-attributes
+              servicePort: 80
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: claims-attributes-resource-quota
+  namespace: $DU_NAMESPACE
+spec:
+  hard:
+    limits.cpu: "500m"
+    limits.memory: "3G"
